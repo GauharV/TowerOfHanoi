@@ -24,7 +24,9 @@ public class TowerOfHanoi {
 
     // Part 3: Move counter (you'll add this)
     private static int moveCount = 0;
-
+    private static ArrayList<Integer> A = new ArrayList<>();
+    private static ArrayList<Integer> B = new ArrayList<>();
+    private static ArrayList<Integer> C = new ArrayList<>();
     /**
      * PART 1: Implement the classic Tower of Hanoi solver
      *
@@ -44,11 +46,15 @@ public class TowerOfHanoi {
     public static void moveDisks(int n, char source, char destination, char auxiliary) {
         // TODO: Implement base case
         if (n == 1){
+            moveCount++;
+            updateTowers(source,destination);
             System.out.println("Move disk "+ n + " from " + source + " to " + destination);
             displayTowers();
         }
         else{
-            moveDisks(n-1,source,auxiliary,destination);
+            moveDisks(n -1,source,auxiliary,destination);
+            moveCount++;
+            updateTowers(source,destination);
             System.out.println("Move disk "+ n + " from " + source + " to " + destination);
             displayTowers();
             moveDisks(n-1,auxiliary,destination,source);
@@ -77,20 +83,26 @@ public class TowerOfHanoi {
     public static void displayTowers() {
         // TODO: Implement tower visualization
         System.out.println("--- Tower State ---");
-        ArrayList<Integer> A = new ArrayList<>();
-        ArrayList<Integer> B = new ArrayList<>();
-        ArrayList<Integer> C = new ArrayList<>();
-        // Display pegs A, B, C and their disks
-        A.add(3);
-        A.add(2);
-        A.add(1);
         System.out.println("A: "+A);
         System.out.println("B: "+B);
         System.out.println("C: "+C);
+        System.out.println("---");
     }
 
-    public static void updateTowers() {
+    public static void updateTowers(char source, char destination) {
+        ArrayList<Integer> from;
+        ArrayList<Integer> to;
 
+        if (source == 'A') from = A;
+        else if (source == 'B') from = B;
+        else from = C;
+
+        if (destination == 'A') to = A;
+        else if (destination == 'B') to = B;
+        else to = C;
+
+        int disk = from.remove(from.size() - 1);
+        to.add(disk);
     }
 
     /**
@@ -125,6 +137,14 @@ public class TowerOfHanoi {
         // Reset move counter
         moveCount = 0;
 
+        A.clear();
+        B.clear();
+        C.clear();
+
+        for (int i = n; i >= 1; i--) {
+            A.add(i);
+        }
+
         // Solve the puzzle
         moveDisks(n, 'A', 'C', 'B');
 
@@ -134,6 +154,14 @@ public class TowerOfHanoi {
         // Test with different numbers of disks
         System.out.println("\n\n=== Try with 4 disks ===");
         moveCount = 0;
+        
+        A.clear();
+        B.clear();
+        C.clear();
+
+        for (int i = 4; i >= 1; i--) {
+            A.add(i);
+        }
         moveDisks(4, 'A', 'C', 'B');
         printStatistics(4);
     }
